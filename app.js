@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
 const indexRouter = require("./routes/index"); // api 처리
 require("dotenv").config();
 
@@ -9,6 +10,10 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+// 정적 파일 서빙 (계산기 웹사이트)
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use("/api", indexRouter);
 
 const mongoURI = process.env.MONGODB_LOCAL;
