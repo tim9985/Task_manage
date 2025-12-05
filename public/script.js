@@ -160,64 +160,120 @@ function formatResult(result) {
 
 // 안전한 수식 파서 및 계산기
 function evaluateExpression(expression) {
-    // 먼저 과학 함수들을 처리
-    expression = processFunctions(expression);
-    
-    // 거듭제곱 연산자 처리
-    expression = processPower(expression);
-    
     // 퍼센트 처리
     expression = processPercent(expression);
     
-    return calculateBasic(expression);
+    // 재귀적으로 수식 계산
+    return parseExpression(expression);
 }
 
-// 과학 함수 처리
-function processFunctions(expr) {
-    const functions = {
-        'sin': (x) => angleMode === 'deg' ? Math.sin(toRadians(x)) : Math.sin(x),
-        'cos': (x) => angleMode === 'deg' ? Math.cos(toRadians(x)) : Math.cos(x),
-        'tan': (x) => angleMode === 'deg' ? Math.tan(toRadians(x)) : Math.tan(x),
-        'asin': (x) => angleMode === 'deg' ? toDegrees(Math.asin(x)) : Math.asin(x),
-        'acos': (x) => angleMode === 'deg' ? toDegrees(Math.acos(x)) : Math.acos(x),
-        'atan': (x) => angleMode === 'deg' ? toDegrees(Math.atan(x)) : Math.atan(x),
-        'log': (x) => Math.log10(x),
-        'ln': (x) => Math.log(x),
-        'sqrt': (x) => Math.sqrt(x),
-        'cbrt': (x) => Math.cbrt(x),
-        'abs': (x) => Math.abs(x),
-        'exp': (x) => Math.exp(x),
-        '10^': (x) => Math.pow(10, x)
-    };
-    
+// 괄호 매칭하여 내부 표현식 찾기
+function findMatchingParen(expr, startIndex) {
+    let depth = 1;
+    for (let i = startIndex + 1; i < expr.length; i++) {
+        if (expr[i] === '(') depth++;
+        else if (expr[i] === ')') {
+            depth--;
+            if (depth === 0) return i;
+        }
+    }
+    return -1;
+}
+
+// 과학 함수 정의
+const scientificFunctions = {
+    'sin': (x) => angleMode === 'deg' ? Math.sin(toRadians(x)) : Math.sin(x),
+    'cos': (x) => angleMode === 'deg' ? Math.cos(toRadians(x)) : Math.cos(x),
+    'tan': (x) => angleMode === 'deg' ? Math.tan(toRadians(x)) : Math.tan(x),
+    'asin': (x) => angleMode === 'deg' ? toDegrees(Math.asin(x)) : Math.asin(x),
+    'acos': (x) => angleMode === 'deg' ? toDegrees(Math.acos(x)) : Math.acos(x),
+    'atan': (x) => angleMode === 'deg' ? toDegrees(Math.atan(x)) : Math.atan(x),
+    'log': (x) => Math.log10(x),
+    'ln': (x) => Math.log(x),
+    'sqrt': (x) => Math.sqrt(x),
+    'cbrt': (x) => Math.cbrt(x),
+    'abs': (x) => Math.abs(x),
+    'exp': (x) => Math.exp(x)
+};
+
+// 메인 표현식 파서 - 괄호와 함수를 재귀적으로 처리
+function parseExpression(expr) {
     let result = expr;
-    let changed = true;
     let iterations = 0;
     const maxIterations = 100;
     
-    while (changed && iterations < maxIterations) {
-        changed = false;
+    // 함수 및 괄호 처리 반복
+    while (iterations < maxIterations) {
         iterations++;
+        let processed = false;
         
-        for (const [funcName, func] of Object.entries(functions)) {
-            const regex = new RegExp(funcName.replace('^', '\\^') + '\\(([^()]+)\\)', 'g');
-            const newResult = result.replace(regex, (match, inner) => {
-                changed = true;
-                const innerValue = calculateBasic(processPower(inner));
-                return func(innerValue).toString();
-            });
-            result = newResult;
+        // 10^( 패턴 처리
+        const tenPowerMatch = result.match(/10\^\(/);
+        if (tenPowerMatch) {
+            const startIdx = tenPowerMatch.index;
+            const parenStart = startIdx + 3;
+            const parenEnd = findMatchingParen(result, parenStart);
+            if (parenEnd !== -1) {
+                const innerExpr = result.substring(parenStart + 1, parenEnd);
+                const innerValue = parseExpression(innerExpr);
+                const powerResult = Math.pow(10, innerValue);
+                result = result.substring(0, startIdx) + powerResult.toString() + result.substring(parenEnd + 1);
+                processed = true;
+                continue;
+            }
         }
+        
+        // 과학 함수 처리
+        for (const funcName of Object.keys(scientificFunctions)) {
+            const funcRegex = new RegExp(funcName + '\\(');
+            const match = result.match(funcRegex);
+            if (match) {
+                const startIdx = match.index;
+                const parenStart = startIdx + funcName.length;
+                const parenEnd = findMatchingParen(result, parenStart);
+                if (parenEnd !== -1) {
+                    const innerExpr = result.substring(parenStart + 1, parenEnd);
+                    const innerValue = parseExpression(innerExpr);
+                    const funcResult = scientificFunctions[funcName](innerValue);
+                    result = result.substring(0, startIdx) + funcResult.toString() + result.substring(parenEnd + 1);
+                    processed = true;
+                    break;
+                }
+            }
+        }
+        
+        if (processed) continue;
+        
+        // 일반 괄호 처리
+        const parenMatch = result.match(/\(/);
+        if (parenMatch) {
+            const startIdx = parenMatch.index;
+            const parenEnd = findMatchingParen(result, startIdx);
+            if (parenEnd !== -1) {
+                const innerExpr = result.substring(startIdx + 1, parenEnd);
+                const innerValue = parseExpression(innerExpr);
+                result = result.substring(0, startIdx) + innerValue.toString() + result.substring(parenEnd + 1);
+                processed = true;
+                continue;
+            }
+        }
+        
+        if (!processed) break;
     }
     
-    return result;
+    // 거듭제곱 처리
+    result = processPower(result);
+    
+    // 기본 사칙연산 계산
+    return calculateBasicOperations(result);
 }
 
-// 거듭제곱 처리
+// 거듭제곱 처리 (과학적 표기법 지원)
 function processPower(expr) {
-    // ^연산자를 찾아서 처리
     let result = expr;
-    const powerRegex = /(-?\d+\.?\d*)\^(-?\d+\.?\d*)/;
+    // 과학적 표기법을 포함한 숫자 패턴
+    const numPattern = '-?\\d+\\.?\\d*(?:[eE][+-]?\\d+)?';
+    const powerRegex = new RegExp('(' + numPattern + ')\\^(' + numPattern + ')');
     
     let match;
     let iterations = 0;
@@ -241,26 +297,8 @@ function processPercent(expr) {
     });
 }
 
-// 기본 사칙연산 계산
-function calculateBasic(expression) {
-    // 괄호 먼저 처리
-    let result = expression;
-    const parenRegex = /\(([^()]+)\)/;
-    let match;
-    let iterations = 0;
-    const maxIterations = 100;
-    
-    while ((match = result.match(parenRegex)) && iterations < maxIterations) {
-        iterations++;
-        const innerResult = calculateWithoutParentheses(match[1]);
-        result = result.replace(match[0], innerResult.toString());
-    }
-    
-    return calculateWithoutParentheses(result);
-}
-
-// 괄호 없는 기본 연산
-function calculateWithoutParentheses(expression) {
+// 기본 사칙연산 계산 (괄호 없음)
+function calculateBasicOperations(expression) {
     // 토큰화
     const tokens = [];
     let currentNumber = '';
@@ -268,9 +306,21 @@ function calculateWithoutParentheses(expression) {
     for (let i = 0; i < expression.length; i++) {
         const char = expression[i];
         
-        if (/[0-9.eE]/.test(char) || (char === '-' && (i === 0 || '+-*/'.includes(expression[i-1])))) {
+        // 숫자, 소수점, 과학적 표기법(e/E), 또는 음수 부호
+        if (/[0-9.eE]/.test(char)) {
             currentNumber += char;
-        } else if (['+', '-', '*', '/'].includes(char)) {
+        } else if (char === '-') {
+            // 음수 처리: 시작이거나, 연산자 또는 여는 괄호 뒤
+            if (currentNumber === '' && (i === 0 || '+-*/^('.includes(expression[i-1]))) {
+                currentNumber += char;
+            } else {
+                if (currentNumber !== '') {
+                    tokens.push(parseFloat(currentNumber));
+                    currentNumber = '';
+                }
+                tokens.push(char);
+            }
+        } else if (['+', '*', '/'].includes(char)) {
             if (currentNumber !== '') {
                 tokens.push(parseFloat(currentNumber));
                 currentNumber = '';
