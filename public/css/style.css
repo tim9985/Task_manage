@@ -1,0 +1,330 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Calculator container */
+.calculator-container {
+    width: 100%;
+    max-width: 450px;
+}
+
+/* Header */
+.calculator-header {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.calculator-header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    background: linear-gradient(90deg, #e94560, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.calculator-header p {
+    font-size: 0.9rem;
+    color: #8892b0;
+    font-weight: 300;
+}
+
+/* Main calculator */
+.calculator {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Display section */
+.display-section {
+    background: linear-gradient(180deg, #0d1b2a 0%, #1b263b 100%);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.history {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9rem;
+    color: #8892b0;
+    min-height: 24px;
+    text-align: right;
+    margin-bottom: 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.display {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: #fff;
+    text-align: right;
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    letter-spacing: 1px;
+}
+
+.display::placeholder {
+    color: #4a5568;
+}
+
+/* Mode toggle */
+.mode-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.mode-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    color: #8892b0;
+}
+
+.mode-btn.active {
+    background: linear-gradient(135deg, #e94560, #ff6b6b);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+}
+
+.mode-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Buttons grid */
+.buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+/* Base button styles */
+.btn {
+    padding: 16px 8px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.btn:hover::before {
+    opacity: 1;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+/* Number buttons */
+.btn.number {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.btn.number:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.btn.zero {
+    grid-column: span 2;
+}
+
+/* Operator buttons */
+.btn.operator {
+    background: linear-gradient(135deg, #4361ee, #3a0ca3);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.2);
+}
+
+.btn.operator:hover {
+    background: linear-gradient(135deg, #5a75f0, #4a1cb3);
+    box-shadow: 0 4px 20px rgba(67, 97, 238, 0.4);
+}
+
+/* Function buttons */
+.btn.function {
+    background: rgba(255, 255, 255, 0.05);
+    color: #8892b0;
+    font-size: 0.9rem;
+}
+
+.btn.function:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Memory buttons */
+.btn.memory {
+    background: rgba(76, 201, 240, 0.15);
+    color: #4cc9f0;
+    font-size: 0.85rem;
+}
+
+.btn.memory:hover {
+    background: rgba(76, 201, 240, 0.25);
+}
+
+/* Clear button */
+.btn.clear {
+    background: linear-gradient(135deg, #e94560, #ff6b6b);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+}
+
+.btn.clear:hover {
+    background: linear-gradient(135deg, #ff5577, #ff7b7b);
+    box-shadow: 0 4px 20px rgba(233, 69, 96, 0.5);
+}
+
+/* Delete button */
+.btn.delete {
+    background: rgba(233, 69, 96, 0.15);
+    color: #e94560;
+}
+
+.btn.delete:hover {
+    background: rgba(233, 69, 96, 0.25);
+}
+
+/* Equals button */
+.btn.equals {
+    grid-column: span 2;
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    color: #fff;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+}
+
+.btn.equals:hover {
+    background: linear-gradient(135deg, #00d4a8, #00dede);
+    box-shadow: 0 4px 20px rgba(0, 184, 148, 0.5);
+}
+
+/* Footer */
+.calculator-footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #4a5568;
+    font-size: 0.8rem;
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .calculator {
+        padding: 16px;
+    }
+    
+    .buttons-grid {
+        gap: 8px;
+    }
+    
+    .btn {
+        padding: 14px 6px;
+        font-size: 0.9rem;
+    }
+    
+    .display {
+        font-size: 2rem;
+    }
+    
+    .calculator-header h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .btn {
+        padding: 12px 4px;
+        font-size: 0.8rem;
+        border-radius: 8px;
+    }
+    
+    .btn.function {
+        font-size: 0.75rem;
+    }
+    
+    .display {
+        font-size: 1.6rem;
+    }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+/* Selection */
+::selection {
+    background: rgba(233, 69, 96, 0.3);
+    color: #fff;
+}

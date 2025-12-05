@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공학용 계산기 | Scientific Calculator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&family=Roboto+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="calculator-container">
+        <header class="calculator-header">
+            <h1>공학용 계산기</h1>
+            <p>Scientific Calculator</p>
+        </header>
+        
+        <div class="calculator">
+            <div class="display-section">
+                <div class="history" id="history"></div>
+                <input type="text" class="display" id="display" readonly placeholder="0">
+            </div>
+            
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="degBtn" onclick="setDegMode()">DEG</button>
+                <button class="mode-btn" id="radBtn" onclick="setRadMode()">RAD</button>
+            </div>
+            
+            <div class="buttons-grid">
+                <!-- Row 1: Scientific functions -->
+                <button class="btn function" onclick="appendFunction('sin(')">sin</button>
+                <button class="btn function" onclick="appendFunction('cos(')">cos</button>
+                <button class="btn function" onclick="appendFunction('tan(')">tan</button>
+                <button class="btn function" onclick="appendFunction('log(')">log</button>
+                <button class="btn function" onclick="appendFunction('ln(')">ln</button>
+                
+                <!-- Row 2: More scientific functions -->
+                <button class="btn function" onclick="appendFunction('asin(')">sin⁻¹</button>
+                <button class="btn function" onclick="appendFunction('acos(')">cos⁻¹</button>
+                <button class="btn function" onclick="appendFunction('atan(')">tan⁻¹</button>
+                <button class="btn function" onclick="appendFunction('sqrt(')">√</button>
+                <button class="btn function" onclick="appendFunction('cbrt(')">∛</button>
+                
+                <!-- Row 3: Power and constants -->
+                <button class="btn function" onclick="appendValue('^')">x<sup>y</sup></button>
+                <button class="btn function" onclick="appendValue('^2')">x²</button>
+                <button class="btn function" onclick="appendValue('^3')">x³</button>
+                <button class="btn function" onclick="appendValue('Math.PI')">π</button>
+                <button class="btn function" onclick="appendValue('Math.E')">e</button>
+                
+                <!-- Row 4: Brackets and special -->
+                <button class="btn function" onclick="appendValue('(')">(</button>
+                <button class="btn function" onclick="appendValue(')')">)</button>
+                <button class="btn function" onclick="appendFunction('exp(')">eˣ</button>
+                <button class="btn function" onclick="appendFunction('factorial(')">n!</button>
+                <button class="btn function" onclick="appendFunction('abs(')">|x|</button>
+                
+                <!-- Row 5: Memory and Clear -->
+                <button class="btn memory" onclick="memoryClear()">MC</button>
+                <button class="btn memory" onclick="memoryRecall()">MR</button>
+                <button class="btn memory" onclick="memoryAdd()">M+</button>
+                <button class="btn memory" onclick="memorySubtract()">M-</button>
+                <button class="btn clear" onclick="clearAll()">AC</button>
+                
+                <!-- Row 6: Numbers and operations -->
+                <button class="btn number" onclick="appendValue('7')">7</button>
+                <button class="btn number" onclick="appendValue('8')">8</button>
+                <button class="btn number" onclick="appendValue('9')">9</button>
+                <button class="btn operator" onclick="appendValue('/')">÷</button>
+                <button class="btn delete" onclick="deleteLast()">⌫</button>
+                
+                <!-- Row 7 -->
+                <button class="btn number" onclick="appendValue('4')">4</button>
+                <button class="btn number" onclick="appendValue('5')">5</button>
+                <button class="btn number" onclick="appendValue('6')">6</button>
+                <button class="btn operator" onclick="appendValue('*')">×</button>
+                <button class="btn function" onclick="appendValue('%')">%</button>
+                
+                <!-- Row 8 -->
+                <button class="btn number" onclick="appendValue('1')">1</button>
+                <button class="btn number" onclick="appendValue('2')">2</button>
+                <button class="btn number" onclick="appendValue('3')">3</button>
+                <button class="btn operator" onclick="appendValue('-')">−</button>
+                <button class="btn function" onclick="toggleSign()">±</button>
+                
+                <!-- Row 9 -->
+                <button class="btn number zero" onclick="appendValue('0')">0</button>
+                <button class="btn number" onclick="appendValue('.')">.</button>
+                <button class="btn operator" onclick="appendValue('+')">+</button>
+                <button class="btn equals" onclick="calculate()">=</button>
+            </div>
+        </div>
+        
+        <footer class="calculator-footer">
+            <p>© 2025 Scientific Calculator</p>
+        </footer>
+    </div>
+    
+    <script src="js/calculator.js"></script>
+</body>
+</html>
