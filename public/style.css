@@ -9,102 +9,281 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', '맑은 고딕', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    padding: 20px;
 }
 
 .calculator {
-    background: #2d2d2d;
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 25px;
+    border-radius: 30px;
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    max-width: 450px;
+    width: 100%;
+}
+
+.calculator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 h1 {
     color: #fff;
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.display {
+.mode-toggle {
+    display: flex;
+    gap: 5px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 4px;
+    border-radius: 10px;
+}
+
+.mode-btn {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.mode-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.4);
+}
+
+.mode-btn:hover:not(.active) {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.display-container {
     margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 16px;
+    padding: 15px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.expression {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    text-align: right;
+    min-height: 24px;
+    margin-bottom: 5px;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
 #display {
     width: 100%;
-    height: 60px;
-    background: #1a1a1a;
+    background: transparent;
     border: none;
-    border-radius: 10px;
     color: #fff;
-    font-size: 2rem;
+    font-size: 2.2rem;
+    font-weight: 300;
     text-align: right;
-    padding: 0 15px;
     outline: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
+}
+
+#display::placeholder {
+    color: rgba(255, 255, 255, 0.3);
 }
 
 .buttons {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
 }
 
 .btn {
-    height: 60px;
-    font-size: 1.5rem;
+    height: 52px;
+    font-size: 0.95rem;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
     font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    pointer-events: none;
 }
 
 .btn:hover {
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }
 
 .btn:active {
-    transform: scale(0.95);
+    transform: translateY(0);
 }
 
+/* 숫자 버튼 */
 .number {
-    background: #4a4a4a;
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
 }
 
 .number:hover {
-    background: #5a5a5a;
+    background: rgba(255, 255, 255, 0.2);
 }
 
+/* 연산자 버튼 */
 .operator {
-    background: #ff9500;
+    background: linear-gradient(135deg, #ff9500 0%, #ff6b00 100%);
     color: #fff;
+    font-size: 1.2rem;
 }
 
 .operator:hover {
-    background: #ffaa33;
+    background: linear-gradient(135deg, #ffaa33 0%, #ff8533 100%);
 }
 
+/* 과학 함수 버튼 */
+.scientific {
+    background: rgba(102, 126, 234, 0.2);
+    color: #a8b4ff;
+    font-size: 0.85rem;
+}
+
+.scientific:hover {
+    background: rgba(102, 126, 234, 0.4);
+    color: #fff;
+}
+
+/* 괄호 버튼 */
+.bracket {
+    background: rgba(0, 255, 200, 0.15);
+    color: #00ffc8;
+    font-size: 1.1rem;
+}
+
+.bracket:hover {
+    background: rgba(0, 255, 200, 0.3);
+}
+
+/* 초기화 버튼 */
 .clear {
-    background: #ff3b30;
+    background: linear-gradient(135deg, #ff3b30 0%, #ff1a1a 100%);
     color: #fff;
 }
 
 .clear:hover {
-    background: #ff5044;
+    background: linear-gradient(135deg, #ff5044 0%, #ff3333 100%);
 }
 
+/* 삭제 버튼 */
+.clear-entry {
+    background: rgba(255, 59, 48, 0.2);
+    color: #ff6b6b;
+}
+
+.clear-entry:hover {
+    background: rgba(255, 59, 48, 0.4);
+}
+
+/* 등호 버튼 */
 .equals {
-    background: #34c759;
+    background: linear-gradient(135deg, #34c759 0%, #30b350 100%);
     color: #fff;
-    grid-row: span 2;
+    font-size: 1.4rem;
 }
 
 .equals:hover {
-    background: #4cd964;
+    background: linear-gradient(135deg, #4cd964 0%, #45c25d 100%);
 }
 
+/* 메모리 버튼 */
+.memory {
+    background: rgba(155, 89, 182, 0.2);
+    color: #bb8fce;
+    font-size: 0.8rem;
+}
+
+.memory:hover {
+    background: rgba(155, 89, 182, 0.4);
+    color: #fff;
+}
+
+/* 0 버튼 (더블 너비) */
 .zero {
     grid-column: span 2;
+}
+
+.footer {
+    margin-top: 15px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.7rem;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+    .calculator {
+        padding: 15px;
+        border-radius: 20px;
+    }
+    
+    .btn {
+        height: 45px;
+        font-size: 0.85rem;
+    }
+    
+    #display {
+        font-size: 1.8rem;
+    }
+    
+    h1 {
+        font-size: 1.1rem;
+    }
+    
+    .calculator-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* 애니메이션 */
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+    }
+}
+
+.btn:focus {
+    outline: none;
+    animation: pulse 0.5s ease;
 }

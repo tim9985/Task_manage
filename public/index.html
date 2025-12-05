@@ -3,38 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>간단한 계산기</title>
+    <title>공학용 계산기</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="calculator">
-        <h1>계산기</h1>
-        <div class="display">
+        <div class="calculator-header">
+            <h1>🔬 공학용 계산기</h1>
+            <div class="mode-toggle">
+                <button id="degBtn" class="mode-btn active" onclick="setAngleMode('deg')">DEG</button>
+                <button id="radBtn" class="mode-btn" onclick="setAngleMode('rad')">RAD</button>
+            </div>
+        </div>
+        
+        <div class="display-container">
+            <div class="expression" id="expression"></div>
             <input type="text" id="display" readonly placeholder="0">
         </div>
+        
         <div class="buttons">
-            <button class="btn clear" onclick="clearDisplay()">C</button>
+            <!-- 첫 번째 행: 과학 함수 -->
+            <button class="btn scientific" onclick="appendFunction('sin(')">sin</button>
+            <button class="btn scientific" onclick="appendFunction('cos(')">cos</button>
+            <button class="btn scientific" onclick="appendFunction('tan(')">tan</button>
+            <button class="btn scientific" onclick="appendFunction('log(')">log</button>
+            <button class="btn scientific" onclick="appendFunction('ln(')">ln</button>
+            
+            <!-- 두 번째 행: 역삼각함수 및 기타 -->
+            <button class="btn scientific" onclick="appendFunction('asin(')">sin⁻¹</button>
+            <button class="btn scientific" onclick="appendFunction('acos(')">cos⁻¹</button>
+            <button class="btn scientific" onclick="appendFunction('atan(')">tan⁻¹</button>
+            <button class="btn scientific" onclick="appendFunction('sqrt(')">√</button>
+            <button class="btn scientific" onclick="appendFunction('cbrt(')">∛</button>
+            
+            <!-- 세 번째 행: 거듭제곱 및 상수 -->
+            <button class="btn scientific" onclick="appendToDisplay('^')">xⁿ</button>
+            <button class="btn scientific" onclick="appendToDisplay('^2')">x²</button>
+            <button class="btn scientific" onclick="appendToDisplay('^3')">x³</button>
+            <button class="btn scientific" onclick="appendConstant('pi')">π</button>
+            <button class="btn scientific" onclick="appendConstant('e')">e</button>
+            
+            <!-- 네 번째 행: 괄호 및 연산자 -->
+            <button class="btn bracket" onclick="appendToDisplay('(')">(</button>
+            <button class="btn bracket" onclick="appendToDisplay(')')">)</button>
+            <button class="btn scientific" onclick="appendFunction('abs(')">|x|</button>
+            <button class="btn scientific" onclick="appendFunction('exp(')">eˣ</button>
+            <button class="btn scientific" onclick="appendToDisplay('%')">%</button>
+            
+            <!-- 다섯 번째 행: 초기화 및 기본 연산 -->
+            <button class="btn clear" onclick="clearDisplay()">AC</button>
+            <button class="btn clear-entry" onclick="deleteLast()">⌫</button>
             <button class="btn operator" onclick="appendToDisplay('/')">/</button>
             <button class="btn operator" onclick="appendToDisplay('*')">×</button>
-            <button class="btn operator" onclick="deleteLast()">⌫</button>
+            <button class="btn scientific" onclick="calculateFactorial()">n!</button>
             
+            <!-- 숫자 패드 -->
             <button class="btn number" onclick="appendToDisplay('7')">7</button>
             <button class="btn number" onclick="appendToDisplay('8')">8</button>
             <button class="btn number" onclick="appendToDisplay('9')">9</button>
-            <button class="btn operator" onclick="appendToDisplay('-')">-</button>
+            <button class="btn operator" onclick="appendToDisplay('-')">−</button>
+            <button class="btn scientific" onclick="appendFunction('10^(')">10ˣ</button>
             
             <button class="btn number" onclick="appendToDisplay('4')">4</button>
             <button class="btn number" onclick="appendToDisplay('5')">5</button>
             <button class="btn number" onclick="appendToDisplay('6')">6</button>
             <button class="btn operator" onclick="appendToDisplay('+')">+</button>
+            <button class="btn scientific" onclick="calculateReciprocal()">1/x</button>
             
             <button class="btn number" onclick="appendToDisplay('1')">1</button>
             <button class="btn number" onclick="appendToDisplay('2')">2</button>
             <button class="btn number" onclick="appendToDisplay('3')">3</button>
             <button class="btn equals" onclick="calculate()">=</button>
+            <button class="btn scientific" onclick="toggleSign()">±</button>
             
             <button class="btn number zero" onclick="appendToDisplay('0')">0</button>
             <button class="btn number" onclick="appendToDisplay('.')">.</button>
+            <button class="btn memory" onclick="memorySave()">MS</button>
+            <button class="btn memory" onclick="memoryRecall()">MR</button>
+        </div>
+        
+        <div class="footer">
+            <span>키보드 입력 지원 | Enter: 계산 | Esc: 초기화</span>
         </div>
     </div>
     <script src="script.js"></script>
